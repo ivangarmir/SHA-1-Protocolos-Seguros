@@ -1,7 +1,5 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Aplicacion del hash SHA-1
  */
 package sha;
 
@@ -14,10 +12,11 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author ivan
+ * @author Ivan Garcia Miranda y Alvaro Alonso Isla
  */
 public class Sha1 extends javax.swing.JFrame {
 
+    //Variables de la interfaz para almacenar los tetos
     String mensajeOriginal = "";
     byte[] mensajeOrignBytes = null;
     String hashSha = "";
@@ -28,6 +27,7 @@ public class Sha1 extends javax.swing.JFrame {
      * Creates new form sha1
      */
     public Sha1() {
+        //Inicializamos la interfaz
         initComponents();
 
     }
@@ -51,6 +51,7 @@ public class Sha1 extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         Txt_hashJava = new javax.swing.JTextField();
         Txt_Infor = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("SHA-1");
@@ -100,6 +101,9 @@ public class Sha1 extends javax.swing.JFrame {
 
         Txt_Infor.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
 
+        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        jLabel4.setText("Develop by: Alvaro Alonso & Ivan Garcia");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -120,6 +124,10 @@ public class Sha1 extends javax.swing.JFrame {
                     .addComponent(jLabel3)
                     .addComponent(Txt_hashJava))
                 .addContainerGap(56, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel4)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -142,7 +150,8 @@ public class Sha1 extends javax.swing.JFrame {
                     .addComponent(Txt_Infor, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(Btn_Borrar)
-                .addContainerGap(57, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+                .addComponent(jLabel4))
         );
 
         pack();
@@ -151,9 +160,9 @@ public class Sha1 extends javax.swing.JFrame {
     private void Txt_hashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Txt_hashActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_Txt_hashActionPerformed
-
+//evento que ocurre al pulsar el boton borrar
     private void Btn_BorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Btn_BorrarActionPerformed
-        // TODO add your handling code here:
+        //Borramos y restablecemos la interfaz
         Txt_Mensaje.setText("");
         Txt_hash.setText("");
         Txt_hashJava.setText("");
@@ -163,34 +172,45 @@ public class Sha1 extends javax.swing.JFrame {
         Txt_Mensaje.enable();
 
     }//GEN-LAST:event_Btn_BorrarActionPerformed
-
+//evento que ocurre al pulsar el boton calcular
     private void Btn_CalcularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Btn_CalcularActionPerformed
-        // TODO add your handling code here:
+        // Instanciamos la clase CalculaHash
         CalculaHash hash = new CalculaHash();
+        //comprobamos que existe un mensaje
         if (Txt_Mensaje.getText().compareTo("") != 0) {
 
             Txt_Mensaje.disable();
             mensajeOriginal = Txt_Mensaje.getText();
             Txt_Mensaje.setText("");
             try {
+                //Extraemos los bytes del mensaje en una codificacion UTF-8
                 mensajeOrignBytes = (mensajeOriginal).getBytes("UTF-8");
             } catch (UnsupportedEncodingException ex) {
                 Logger.getLogger(Sha1.class.getName()).log(Level.SEVERE, null, ex);
             }
+            //Llamamos al metodo calcular pasando como parametro el array de bytes
             hashSha = hash.calcular(mensajeOrignBytes);
 
             try {
+                //Calculamos el hash mediante la libreria de java
+                //esto se realiza para hacer una comparativa entre el neustor y el de java
+                //Instanciamos un messageDigest del tipo SHA-1
                 MessageDigest digest = MessageDigest.getInstance("SHA-1");
+                //Hacemos el hash
                 hashedBytes = digest.digest(mensajeOrignBytes);
+                //Convertimo a un string hexadecimal
                 hashShaJava = convertByteArrayToHexString(hashedBytes);
             } catch (NoSuchAlgorithmException ex) {
                 Logger.getLogger(Sha1.class.getName()).log(Level.SEVERE, null, ex);
             }
+            //Si ambos hash coinciden, es todo correcto
             if (hashSha.compareTo(hashShaJava) == 0) {
                 Txt_hashJava.setBackground(Color.green);
                 Txt_hash.setBackground(Color.green);
                 Txt_Infor.setText("El codigo hash calculado es correcto");
-            } else {
+            } else 
+            //Los hash calculados no coinciden
+            {
                 Txt_hashJava.setBackground(Color.red);
                 Txt_hash.setBackground(Color.red);
                 Txt_Infor.setText("Ups! Parece que uno de los hash es incorrecto!!");
@@ -199,7 +219,9 @@ public class Sha1 extends javax.swing.JFrame {
 
             Txt_hashJava.setText(hashShaJava);
             Txt_hash.setText(hashSha);
-        } else {
+        } else 
+        //No se ha introducido ningun mensaje
+        {
             Txt_Infor.setText("No has introducido ningun dato");
 
         }
@@ -261,6 +283,7 @@ public class Sha1 extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }

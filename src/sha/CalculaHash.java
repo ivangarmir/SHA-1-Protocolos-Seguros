@@ -1,22 +1,31 @@
+/*
+ * Aplicacion del hash SHA-1
+ */
 package sha;
 
 import java.nio.ByteBuffer;
 
 /**
  *
- * @author ivan
+ * @author Ivan Garcia Miranda y Alvaro Alonso Isla
  */
 public class CalculaHash {
 
+    //variables del algoritmo
     int temp;
     int A, B, C, D, E;
+    //Inicializacion de la matriz H
     int[] H = {0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0};
     int F;
     static final String completo = "00000000";
 
+    //Este metodo recibe un array de bytes
     String calcular(byte[] bytesEntrada) {
+        //rellenamos el array de bytes
         byte[] arrayDatosRelleno = rellenar(bytesEntrada);
+        //Inicializacion de las constantes
         int[] K = {0x5A827999, 0x6ED9EBA1, 0x8F1BBCDC, 0xCA62C1D6};
+        //Obtenemos el numero de repeticiones que hay que hacer en funcion dle tamaño del mensaje
         int numRep = arrayDatosRelleno.length / 64;
         byte[] datos = new byte[64];
 
@@ -33,6 +42,7 @@ public class CalculaHash {
         return arrIntHexToInt(H);
     }
 
+    //este metodo se encarga de rellenar o particionar el mensaje en bloques
     private byte[] rellenar(byte[] data) {
         int tamOriginal = data.length;
         int tamCola = tamOriginal % 64;
@@ -60,6 +70,7 @@ public class CalculaHash {
 
     }
 
+    //Este metodo se encarga de procesar cada uno de los bloques dekl mensaje
     private void procesaBloque(byte[] entrada, int H[], int K[]) {
 
         int[] W = new int[80];
@@ -71,6 +82,7 @@ public class CalculaHash {
             }
         }
 
+        //cada bucle tiene 4 vueltas diferentes
         for (int j = 16; j < 80; j++) {
             W[j] = rotaIzq(W[j - 3] ^ W[j - 8] ^ W[j - 14] ^ W[j - 16], 1);
         }
@@ -135,11 +147,13 @@ public class CalculaHash {
 
     }
 
+    //Este metodo se encarga de rotar a la izquierda
     final int rotaIzq(int valor, int bits) {
         int q = (valor << bits) | (valor >>> (32 - bits));
         return q;
     }
 
+    //este metodo recibe un array de hexadecimales y lo convierte a enteros
     private String arrIntHexToInt(int[] entrada) {
         String salida = "";
         String stringTemp;
@@ -177,6 +191,7 @@ public class CalculaHash {
         return salida;
     }
 
+    //Este metodo combiente un hexadecimal a un string
     static final String toHexString(final ByteBuffer bb) {
         final StringBuffer sb = new StringBuffer();
         for (int i = 0; i < bb.limit(); i += 4) {
